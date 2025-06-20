@@ -4,8 +4,12 @@ import AddBook from './pages/AddBook';
 import BookDetail from './pages/BookDetail';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useSelector } from 'react-redux';
+import LoadingOverlay from './components/LoadingOverlay';
 
 function App() {
+  const { loading } = useSelector((state) => state.books);
+
   return (
     <Router>
       <div>
@@ -18,6 +22,8 @@ function App() {
           <Route path="/add-book" element={<AddBook />} />
           <Route path="/books/:id" element={<BookDetail />} />
         </Routes>
+
+        {loading && <LoadingOverlay />}
 
         <ToastContainer />
       </div>
