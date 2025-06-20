@@ -12,38 +12,27 @@ function BookDetail() {
 
   useEffect(() => {
     dispatch(fetchBookById(id));
-
-    return () => {
-      dispatch(clearSelectedBook());
-    };
+    return () => dispatch(clearSelectedBook());
   }, [dispatch, id]);
 
   const handleRent = () => {
-    dispatch(rentBook(id))
-      .unwrap()
+    dispatch(rentBook(id)).unwrap()
       .then(() => {
         toast.success('Book rented successfully!');
         navigate('/');
-      })
-      .catch((error) => {
-        toast.error(error.message || 'Failed to rent book.');
-      });
+      }).catch((error) => toast.error(error.message));
   };
 
   const handleReturn = () => {
-    dispatch(returnBook(id))
-      .unwrap()
+    dispatch(returnBook(id)).unwrap()
       .then(() => {
         toast.success('Book returned successfully!');
         navigate('/');
-      })
-      .catch((error) => {
-        toast.error(error.message || 'Failed to return book.');
-      });
+      }).catch((error) => toast.error(error.message));
   };
 
   if (loading) return <p>Loading book details...</p>;
-  if (error) return <p>Error: {error.message || 'Failed to load book.'}</p>;
+  if (error) return <p>Error: {error.message}</p>;
   if (!selectedBook) return <p>No book found.</p>;
 
   return (
@@ -55,9 +44,9 @@ function BookDetail() {
       <p><strong>Status:</strong> {selectedBook.is_available ? 'Available' : 'Rented'}</p>
 
       {selectedBook.is_available ? (
-        <button onClick={handleRent}>Rent this Book</button>
+        <button className="btn btn-primary" onClick={handleRent}>Rent this Book</button>
       ) : (
-        <button onClick={handleReturn}>Return this Book</button>
+        <button className="btn btn-success" onClick={handleReturn}>Return this Book</button>
       )}
     </div>
   );

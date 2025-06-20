@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import BookList from './pages/BookList';
 import AddBook from './pages/AddBook';
 import BookDetail from './pages/BookDetail';
@@ -6,27 +6,72 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useSelector } from 'react-redux';
 import LoadingOverlay from './components/LoadingOverlay';
+import ErrorPage from './pages/ErrorPage';
+import Layout from './components/Layout';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import PrivateRoute from './components/PrivateRoute';
+import Dashboard from './pages/Dashboard';
 
 function App() {
   const { loading } = useSelector((state) => state.books);
 
   return (
     <Router>
-      <div>
-        <nav>
-          <Link to="/">Book List</Link> | <Link to="/add-book">Add New Book</Link>
-        </nav>
-
+      <Layout>
         <Routes>
-          <Route path="/" element={<BookList />} />
-          <Route path="/add-book" element={<AddBook />} />
-          <Route path="/books/:id" element={<BookDetail />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+
+          <Route
+            path="/"
+            element={
+              <PrivateRoute>
+                <Dashboard />
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path="/books"
+            element={
+              <PrivateRoute>
+                <BookList />
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path="/add-book"
+            element={
+              <PrivateRoute>
+                <AddBook />
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path="/books/:id"
+            element={
+              <PrivateRoute>
+                <BookDetail />
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path="*"
+            element={
+              <PrivateRoute>
+                <ErrorPage />
+              </PrivateRoute>
+            }
+          />
         </Routes>
 
         {loading && <LoadingOverlay />}
-
         <ToastContainer />
-      </div>
+      </Layout>
     </Router>
   );
 }
