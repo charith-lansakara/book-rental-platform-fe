@@ -1,8 +1,15 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchBookById, rentBook, returnBook, clearSelectedBook } from '../features/books/bookSlice';
+import {
+  fetchBookById,
+  rentBook,
+  returnBook,
+  clearSelectedBook,
+} from '../features/books/bookSlice';
 import { useParams, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { FaArrowLeft, FaBook, FaCheck, FaUndo } from 'react-icons/fa'; // Already imported FaBook, added FaArrowLeft
+
 
 function BookDetail() {
   const { id } = useParams();
@@ -16,38 +23,90 @@ function BookDetail() {
   }, [dispatch, id]);
 
   const handleRent = () => {
-    dispatch(rentBook(id)).unwrap()
+    dispatch(rentBook(id))
+      .unwrap()
       .then(() => {
         toast.success('Book rented successfully!');
         navigate('/');
-      }).catch((error) => toast.error(error.message));
+      })
+      .catch((error) => toast.error(error.message));
   };
 
   const handleReturn = () => {
-    dispatch(returnBook(id)).unwrap()
+    dispatch(returnBook(id))
+      .unwrap()
       .then(() => {
         toast.success('Book returned successfully!');
         navigate('/');
-      }).catch((error) => toast.error(error.message));
+      })
+      .catch((error) => toast.error(error.message));
   };
 
-  if (loading) return <p>Loading book details...</p>;
-  if (error) return <p>Error: {error.message}</p>;
-  if (!selectedBook) return <p>No book found.</p>;
+  useEffect(() => {
+      document.title = 'Book Detail | Book Rental App'; // ⬅️ Set the page title
+    }, []);
+
+  if (loading) {
+    return (
+      <div className="text-center my-5">
+        <div className="spinner-border text-primary" role="status"></div>
+        <p className="mt-2">Loading book details...</p>
+      </div>
+    );
+  }
+
+  if (error) return <div className="alert alert-danger">Error: {error.message}</div>;
+  if (!selectedBook) return <div className="alert alert-warning">No book found.</div>;
+
+  
 
   return (
-    <div>
-      <h2>Book Detail</h2>
-      <h3>{selectedBook.title}</h3>
-      <p><strong>Author:</strong> {selectedBook.author}</p>
-      <p><strong>Published Date:</strong> {selectedBook.published_date}</p>
-      <p><strong>Status:</strong> {selectedBook.is_available ? 'Available' : 'Rented'}</p>
+    <div className="container py-5">
+      <div className="card shadow-lg p-4 mx-auto" style={{ maxWidth: '600px' }}>
+        <div className="text-center mb-4">
+          <FaBook size={50} className="text-primary mb-2" />
+          <h2 className="text-primary">{selectedBook.title}</h2>
+          <span
+            className={`badge ${
+              selectedBook.is_available ? 'bg-success' : 'bg-danger'
+            } fs-6 mt-2`}
+          >
+            {selectedBook.is_available ? 'Available' : 'Rented'}
+          </span>
+        </div>
 
-      {selectedBook.is_available ? (
-        <button className="btn btn-primary" onClick={handleRent}>Rent this Book</button>
-      ) : (
-        <button className="btn btn-success" onClick={handleReturn}>Return this Book</button>
-      )}
+        <ul className="list-group list-group-flush mb-4">
+          <li className="list-group-item">
+            <strong>Author:</strong> {selectedBook.author}
+          </li>
+          <li className="list-group-item">
+            <strong>Published Date:</strong> {selectedBook.published_date}
+          </li>
+        </ul>
+
+        {/* Buttons Row */}
+        <div className="row g-2">
+          <div className="col-6 d-grid">
+            <button className="btn btn-outline-secondary" onClick={() => navigate(-1)}>
+              <FaArrowLeft className="me-2" />
+              Back
+            </button>
+          </div>
+          <div className="col-6 d-grid">
+            {selectedBook.is_available ? (
+              <button className="btn btn-primary" onClick={handleRent}>
+                <FaCheck className="me-2" />
+                Rent this Book
+              </button>
+            ) : (
+              <button className="btn btn-success" onClick={handleReturn}>
+                <FaUndo className="me-2" />
+                Return this Book
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

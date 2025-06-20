@@ -67,6 +67,11 @@ function App() {
               </PrivateRoute>
             }
           />
+
+          {/* Test Error pages */}
+          {/* <Route path="/unauthorized" element={<ErrorPage code={401} />} />
+          <Route path="/forbidden" element={<ErrorPage code={403} />} />
+          <Route path="/server-error" element={<ErrorPage code={500} />} /> */}
         </Routes>
 
         {loading && <LoadingOverlay />}

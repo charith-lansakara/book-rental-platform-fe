@@ -1,14 +1,18 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { logoutUser, fetchMe } from '../features/auth/authSlice';
+import { FaSignOutAlt } from 'react-icons/fa';
 
 function Layout({ children }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { isLoggedIn, user } = useSelector((state) => state.auth);
 
+  const [showModal, setShowModal] = useState(false);
+
   const handleLogout = () => {
+    setShowModal(false); // Close modal immediately
     dispatch(logoutUser())
       .unwrap()
       .then(() => navigate('/login'));
@@ -23,7 +27,8 @@ function Layout({ children }) {
   return (
     <div className="d-flex flex-column min-vh-100">
       {/* Header */}
-      <header className="bg-primary text-white py-3 px-4 d-flex align-items-center justify-content-between shadow-sm">
+      <header className="text-white py-3 px-4 d-flex align-items-center justify-content-between shadow-sm"
+      style={{ backgroundColor: '#0a1c4b' }}>
         <div className="d-flex align-items-center">
           <img src="/logo.png" alt="Logo" height="60" className="me-3 rounded-circle" />
           <h4 className="mb-0 fw-bold">Book Rental System</h4>
@@ -34,12 +39,10 @@ function Layout({ children }) {
             <Link to="/" className="btn btn-outline-light me-3">Dashboard</Link>
             <span className="me-3">Hi, <strong>{user?.name}</strong> ({user?.role})</span>
             <button
-              onClick={() => {
-                if (window.confirm('Are you sure you want to logout?')) handleLogout();
-              }}
-              className="btn btn-danger"
+              onClick={() => setShowModal(true)}
+              className="btn btn-danger d-flex align-items-center"
             >
-              Logout
+              <FaSignOutAlt className="me-2" /> Logout
             </button>
           </nav>
         )}
@@ -51,9 +54,44 @@ function Layout({ children }) {
       </main>
 
       {/* Footer */}
-      <footer className="bg-light text-center p-3 border-top mt-auto">
-        <small>&copy; {new Date().getFullYear()} Book Rental System. All rights reserved.</small>
+      <footer className="text-center p-3 border-top mt-auto"
+      style={{ backgroundColor: '#0a1c4b' }}>
+        <small style={{ color: '#ffffff' }}>&copy; {new Date().getFullYear()} Book Rental System. All rights reserved.</small>
       </footer>
+
+      {/* Logout Confirmation Modal */}
+      {showModal && (
+        <>
+          <div className="modal fade show d-block" tabIndex="-1">
+            <div className="modal-dialog">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h5 className="modal-title">Confirm Logout</h5>
+                  <button type="button" className="btn-close" onClick={() => setShowModal(false)}></button>
+                </div>
+                <div className="modal-body">
+                  <p>Are you sure you want to log out?</p>
+                </div>
+                <div className="modal-footer">
+                  <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-danger"
+                    onClick={handleLogout}
+                  >
+                    <FaSignOutAlt className="me-2" /> Logout
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Modal Backdrop */}
+          <div className="modal-backdrop fade show"></div>
+        </>
+      )}
     </div>
   );
 }

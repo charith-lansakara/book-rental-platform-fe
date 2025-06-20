@@ -4,6 +4,7 @@ import { fetchBooks } from '../features/books/bookSlice';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
+
 function BookList() {
   const dispatch = useDispatch();
   const { books, loading, error } = useSelector((state) => state.books);
@@ -37,50 +38,93 @@ function BookList() {
     dispatch(fetchBooks(queryString));
   };
 
-  if (loading) return <p>Loading books...</p>;
-  if (error) return <p>Failed to load books.</p>;
+  useEffect(() => {
+        document.title = 'Book List | Book Rental App'; // ⬅️ Set the page title
+      }, []);
 
   return (
-    <div>
-      <h2>Book List</h2>
-
-      <div className="mb-3">
-        <input type="text" className="form-control d-inline w-auto me-2" placeholder="Search by author"
-          value={author} onChange={(e) => setAuthor(e.target.value)} />
-
-        <select className="form-select d-inline w-auto me-2" value={availability} onChange={(e) => setAvailability(e.target.value)}>
-          <option value="">All</option>
-          <option value="available">Available</option>
-          <option value="rented">Rented</option>
-        </select>
-
-        <button className="btn btn-primary me-2" onClick={handleFilter}>Apply</button>
-        <button className="btn btn-secondary" onClick={clearFilters}>Clear</button>
+    <div className="container py-4">
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        <h2 className="text" style={{ color: '#0a1c4b' }}>Book List</h2>
+        <Link to="/add-book" className="btn btn-success">+ Add New Book</Link>
       </div>
 
-      {books?.data?.length > 0 ? (
-        <div>
+      {/* Filters */}
+      <div className="row g-2 mb-4">
+        <div className="col-md-4">
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Search by author"
+            value={author}
+            onChange={(e) => setAuthor(e.target.value)}
+          />
+        </div>
+        <div className="col-md-3">
+          <select
+            className="form-select"
+            value={availability}
+            onChange={(e) => setAvailability(e.target.value)}
+          >
+            <option value="">All Status</option>
+            <option value="available">Available</option>
+            <option value="rented">Rented</option>
+          </select>
+        </div>
+        <div className="col-md-2 d-grid">
+          <button className="btn btn-primary" onClick={handleFilter}>Apply</button>
+        </div>
+        <div className="col-md-2 d-grid">
+          <button className="btn btn-secondary" onClick={clearFilters}>Clear</button>
+        </div>
+      </div>
+
+      {/* Book List */}
+      {loading ? (
+        <div className="text-center my-5">
+          <div className="spinner-border text-primary" role="status"></div>
+          <p className="mt-3">Loading books...</p>
+        </div>
+      ) : books?.data?.length > 0 ? (
+        <div className="row">
           {books.data.map((book) => (
-            <div key={book.id} className="card mb-3">
-              <div className="card-body">
-                <h5 className="card-title">{book.title}</h5>
-                <p className="card-text">Author: {book.author}</p>
-                <p className="card-text">Status: <strong>{book.is_available ? 'Available' : 'Rented'}</strong></p>
-                <Link to={`/books/${book.id}`} className="btn btn-outline-primary">View Details</Link>
+            <div key={book.id} className="col-md-6 col-lg-4 mb-4">
+              <div className="card h-100 shadow-sm">
+                <div className="card-body">
+                  <h5 className="card-title text-primary">{book.title}</h5>
+                  <p className="card-text">Author: <strong>{book.author}</strong></p>
+                  <p className="card-text">
+                    Status:{' '}
+                    <span className={book.is_available ? 'text-success' : 'text-danger'}>
+                      {book.is_available ? 'Available' : 'Rented'}
+                    </span>
+                  </p>
+                  <Link to={`/books/${book.id}`} className="btn btn-outline-primary btn-sm">
+                    View Details
+                  </Link>
+                </div>
               </div>
             </div>
           ))}
-
-          <div className="mt-4">
-            {books.meta?.links?.map((link, index) => (
-              <button key={index} onClick={() => handlePageChange(link.url)} disabled={!link.url}
-                className={`btn ${link.active ? 'btn-primary' : 'btn-outline-secondary'} me-2 mb-2`}>
-                {link.label.replace(/&raquo;|&laquo;/g, '')}
-              </button>
-            ))}
-          </div>
         </div>
-      ) : (<p>No books available.</p>)}
+      ) : (
+        <div className="alert alert-warning">No books available.</div>
+      )}
+
+      {/* Pagination */}
+      {books?.meta?.links?.length > 0 && (
+        <div className="d-flex flex-wrap gap-2 mt-4 justify-content-center">
+          {books.meta.links.map((link, index) => (
+            <button
+              key={index}
+              className={`btn ${link.active ? 'btn-primary' : 'btn-outline-secondary'} btn-sm`}
+              disabled={!link.url}
+              onClick={() => handlePageChange(link.url)}
+              dangerouslySetInnerHTML={{ __html: link.label.replace(/&raquo;|&laquo;/g, '') }}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

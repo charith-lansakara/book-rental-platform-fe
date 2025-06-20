@@ -1,16 +1,17 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginUser } from '../features/auth/authSlice';
 import { toast } from 'react-toastify';
 import { useNavigate, Link } from 'react-router-dom';
-import { FaUserCircle } from 'react-icons/fa';
+import { FaUserCircle, FaEye, FaEyeSlash } from 'react-icons/fa';
 
 function Login() {
   const { register, handleSubmit, formState: { errors } } = useForm();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { loading } = useSelector((state) => state.auth);
+  const [showPassword, setShowPassword] = useState(false);
 
   const onSubmit = (data) => {
     dispatch(loginUser(data))
@@ -24,6 +25,10 @@ function Login() {
       });
   };
 
+  useEffect(() => {
+    document.title = 'Login | Book Rental App';
+  }, []);
+
   return (
     <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '75vh' }}>
       <div className="card p-4 shadow-lg" style={{ maxWidth: '450px', width: '100%' }}>
@@ -33,17 +38,39 @@ function Login() {
           <p className="text-muted">Login to your Book Rental account</p>
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit)} noValidate>
           <div className="mb-3">
-            <label>Email address</label>
-            <input type="email" className="form-control" {...register('email', { required: 'Email is required' })} />
-            {errors.email && <small className="text-danger">{errors.email.message}</small>}
+            <label className="form-label">
+              Email address <span className="text-danger">*</span>
+            </label>
+            <input
+              type="email"
+              className={`form-control ${errors.email ? 'is-invalid' : ''}`}
+              {...register('email', { required: 'Email is required' })}
+            />
+            {errors.email && <div className="invalid-feedback">{errors.email.message}</div>}
           </div>
 
           <div className="mb-3">
-            <label>Password</label>
-            <input type="password" className="form-control" {...register('password', { required: 'Password is required' })} />
-            {errors.password && <small className="text-danger">{errors.password.message}</small>}
+            <label className="form-label">
+              Password <span className="text-danger">*</span>
+            </label>
+            <div className="input-group">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                className={`form-control ${errors.password ? 'is-invalid' : ''}`}
+                {...register('password', { required: 'Password is required' })}
+              />
+              <button
+                type="button"
+                className="btn btn-outline-secondary"
+                onClick={() => setShowPassword(!showPassword)}
+                tabIndex={-1}
+              >
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
+              </button>
+            </div>
+            {errors.password && <div className="invalid-feedback d-block">{errors.password.message}</div>}
           </div>
 
           <button type="submit" className="btn btn-primary w-100" disabled={loading}>
