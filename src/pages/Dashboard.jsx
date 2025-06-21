@@ -9,7 +9,7 @@ function Dashboard() {
   const [summary, setSummary] = useState({ total: 0, available: 0, rented: 0 });
 
   useEffect(() => {
-    document.title = 'Dashboard | Book Rental App';
+    document.title = 'Dashboard | Book Rental System';
 
     // Fetch summary stats
     getBookSummary()

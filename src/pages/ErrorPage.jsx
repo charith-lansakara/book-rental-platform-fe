@@ -26,7 +26,7 @@ function ErrorPage({ code = 404, message }) {
   const errorImage = errorImages[code] || '/images/default-error.png';
 
   useEffect(() => {
-        document.title = 'Error | Book Rental App'; 
+        document.title = 'Error | Book Rental System'; 
       }, []);
 
   return (

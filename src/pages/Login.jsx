@@ -26,7 +26,7 @@ function Login() {
   };
 
   useEffect(() => {
-    document.title = 'Login | Book Rental App';
+    document.title = 'Login | Book Rental System';
   }, []);
 
   return (

@@ -38,7 +38,7 @@ function Register() {
   };
 
   useEffect(() => {
-    document.title = 'Register | Book Rental App';
+    document.title = 'Register | Book Rental System';
   }, []);
 
   return (

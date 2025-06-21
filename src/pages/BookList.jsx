@@ -40,7 +40,7 @@ function BookList() {
   };
 
   useEffect(() => {
-        document.title = 'Book List | Book Rental App'; 
+        document.title = 'Book List | Book Rental System'; 
       }, []);
 
   return (

@@ -43,7 +43,7 @@ function BookDetail() {
   };
 
   useEffect(() => {
-      document.title = 'Book Detail | Book Rental App'; 
+      document.title = 'Book Detail | Book Rental System'; 
     }, []);
 
   if (loading) {

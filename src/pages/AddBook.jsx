@@ -27,7 +27,7 @@ function AddBook() {
   };
 
   useEffect(() => {
-      document.title = 'Add Book | Book Rental App';
+      document.title = 'Add Book | Book Rental System';
     }, []);
 
   return (
