@@ -28,7 +28,12 @@ function Register() {
         navigate('/login');
       })
       .catch((err) => {
-        toast.error(err.message || 'Registration failed.');
+        if (err.errors) {
+          const errorMessages = Object.values(err.errors).flat().join(' ');
+          toast.error(errorMessages);
+        } else {
+          toast.error(err.message || 'Something went wrong.');
+        }
       });
   };
 
@@ -78,7 +83,17 @@ function Register() {
               <input
                 type={showPassword ? 'text' : 'password'}
                 className={`form-control ${errors.password ? 'is-invalid' : ''}`}
-                {...register('password', { required: 'Password is required' })}
+                {...register('password', {
+                  required: 'Password is required',
+                  minLength: {
+                    value: 8,
+                    message: 'Password must be at least 8 characters',
+                  },
+                  pattern: {
+                    value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+                    message: 'Password must contain uppercase, lowercase, number, and special character',
+                  },
+                })}
               />
               <button
                 type="button"

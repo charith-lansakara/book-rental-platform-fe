@@ -4,48 +4,48 @@ import axiosClient from '../../api/axiosClient';
 // Load token from localStorage if exists
 const token = localStorage.getItem('token');
 
-// Register
+// Register User
 export const registerUser = createAsyncThunk(
   'auth/registerUser',
   async (data, { rejectWithValue }) => {
     try {
-      const response = await axiosClient.post('/register', data);
-      return response.data;
+      const res = await axiosClient.post('/register', data);
+      return res.data;
     } catch (err) {
-      return rejectWithValue(err.response.data);
+      return rejectWithValue(err.response?.data || { message: err.message });
     }
   }
 );
 
-// Login
+// Login User
 export const loginUser = createAsyncThunk(
   'auth/loginUser',
   async (data, { rejectWithValue }) => {
     try {
-      const response = await axiosClient.post('/login', data);
-      const { access_token, user } = response.data;
+      const res = await axiosClient.post('/login', data);
+      const { access_token, user } = res.data;
       localStorage.setItem('token', access_token);
       return { token: access_token, user };
     } catch (err) {
-      return rejectWithValue(err.response.data);
+      return rejectWithValue(err.response?.data || { message: err.message });
     }
   }
 );
 
-// Get current user
+// Fetch Current User
 export const fetchMe = createAsyncThunk(
   'auth/fetchMe',
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axiosClient.get('/me');
-      return response.data;
+      const res = await axiosClient.get('/me');
+      return res.data;
     } catch (err) {
-      return rejectWithValue(err.response.data);
+      return rejectWithValue(err.response?.data || { message: err.message });
     }
   }
 );
 
-// Logout
+// Logout User
 export const logoutUser = createAsyncThunk(
   'auth/logoutUser',
   async (_, { rejectWithValue }) => {
@@ -53,7 +53,7 @@ export const logoutUser = createAsyncThunk(
       await axiosClient.post('/logout');
       localStorage.removeItem('token');
     } catch (err) {
-      return rejectWithValue(err.response.data);
+      return rejectWithValue(err.response?.data || { message: err.message });
     }
   }
 );
