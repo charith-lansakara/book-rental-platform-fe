@@ -101,7 +101,7 @@ const bookSlice = createSlice({
       })
       .addCase(fetchBookById.fulfilled, (state, action) => {
         state.loading = false;
-        state.selectedBook = action.payload.data; // <-- important fix
+        state.selectedBook = action.payload.data; 
       })
       .addCase(fetchBookById.rejected, (state, action) => {
         state.loading = false;
@@ -114,7 +114,7 @@ const bookSlice = createSlice({
       })
       .addCase(addBook.fulfilled, (state, action) => {
         state.loading = false;
-        state.books.data.push(action.payload); // if paginated response use data array
+        state.books.data.push(action.payload); 
       })
       .addCase(addBook.rejected, (state, action) => {
         state.loading = false;

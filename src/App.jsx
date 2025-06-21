@@ -44,7 +44,7 @@ function App() {
           <Route
             path="/add-book"
             element={
-              <PrivateRoute>
+              <PrivateRoute allowedRoles={['admin']}>
                 <AddBook />
               </PrivateRoute>
             }

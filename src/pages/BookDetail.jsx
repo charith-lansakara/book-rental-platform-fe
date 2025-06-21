@@ -8,7 +8,7 @@ import {
 } from '../features/books/bookSlice';
 import { useParams, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { FaArrowLeft, FaBook, FaCheck, FaUndo } from 'react-icons/fa'; // Already imported FaBook, added FaArrowLeft
+import { FaArrowLeft, FaBook, FaCheck, FaUndo } from 'react-icons/fa';
 
 
 function BookDetail() {
@@ -43,7 +43,7 @@ function BookDetail() {
   };
 
   useEffect(() => {
-      document.title = 'Book Detail | Book Rental App'; // ⬅️ Set the page title
+      document.title = 'Book Detail | Book Rental App'; 
     }, []);
 
   if (loading) {

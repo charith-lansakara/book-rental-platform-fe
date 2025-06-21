@@ -12,18 +12,4 @@ axiosClient.interceptors.request.use((config) => {
   return config;
 });
 
-// Test Error pages
-// axiosClient.interceptors.response.use(
-//   response => response,
-//   error => {
-//     if (error.response) {
-//       const status = error.response.status;
-//       if (status === 401) window.location.href = '/unauthorized';
-//       if (status === 403) window.location.href = '/forbidden';
-//       if (status === 500) window.location.href = '/server-error';
-//     }
-//     return Promise.reject(error);
-//   }
-// );
-
 export default axiosClient;

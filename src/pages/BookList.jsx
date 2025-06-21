@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 
 
 function BookList() {
+  const { user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const { books, loading, error } = useSelector((state) => state.books);
   const [author, setAuthor] = useState('');
@@ -39,14 +40,16 @@ function BookList() {
   };
 
   useEffect(() => {
-        document.title = 'Book List | Book Rental App'; // ⬅️ Set the page title
+        document.title = 'Book List | Book Rental App'; 
       }, []);
 
   return (
     <div className="container py-4">
       <div className="d-flex justify-content-between align-items-center mb-4">
         <h2 className="text" style={{ color: '#0a1c4b' }}>Book List</h2>
+        {user?.role === 'admin' && (
         <Link to="/add-book" className="btn btn-success">+ Add New Book</Link>
+        )}
       </div>
 
       {/* Filters */}

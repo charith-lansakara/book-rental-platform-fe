@@ -1,14 +1,20 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { FaBook, FaPlus, FaUserCircle } from 'react-icons/fa';
-import { useEffect } from 'react';
+import { FaBook, FaPlus, FaUserCircle, FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
+import { getBookSummary } from '../api/bookApi';
 
 function Dashboard() {
   const { user } = useSelector((state) => state.auth);
+  const [summary, setSummary] = useState({ total: 0, available: 0, rented: 0 });
 
   useEffect(() => {
-    document.title = 'Dashboard | Book Rental App'; // ⬅️ Set the page title
+    document.title = 'Dashboard | Book Rental App';
+
+    // Fetch summary stats
+    getBookSummary()
+      .then(res => setSummary(res.data))
+      .catch(() => setSummary({ total: 0, available: 0, rented: 0 }));
   }, []);
 
   return (
@@ -20,6 +26,39 @@ function Dashboard() {
         <p className="text-muted lead">
           You are logged in as <span className="badge bg-info text-dark">{user?.role?.toUpperCase()}</span>
         </p>
+      </div>
+
+      {/* Summary Stat Cards */}
+      <div className="row row-cols-1 row-cols-md-3 g-4 mb-5">
+        <div className="col">
+          <div className="card text-white bg-primary text-center shadow-sm">
+            <div className="card-body">
+              <FaBook size={50} className="mb-3" />
+              <h5 className="card-title">Total Books</h5>
+              <h2>{summary.total}</h2>
+            </div>
+          </div>
+        </div>
+
+        <div className="col">
+          <div className="card text-white bg-success text-center shadow-sm">
+            <div className="card-body">
+              <FaCheckCircle size={50} className="mb-3" />
+              <h5 className="card-title">Available Books</h5>
+              <h2>{summary.available}</h2>
+            </div>
+          </div>
+        </div>
+
+        <div className="col">
+          <div className="card text-white bg-danger text-center shadow-sm">
+            <div className="card-body">
+              <FaTimesCircle size={50} className="mb-3" />
+              <h5 className="card-title">Rented Books</h5>
+              <h2>{summary.rented}</h2>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Action Cards */}

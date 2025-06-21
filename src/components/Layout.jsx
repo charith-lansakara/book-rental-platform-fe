@@ -8,11 +8,10 @@ function Layout({ children }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { isLoggedIn, user } = useSelector((state) => state.auth);
-
   const [showModal, setShowModal] = useState(false);
 
   const handleLogout = () => {
-    setShowModal(false); // Close modal immediately
+    setShowModal(false);
     dispatch(logoutUser())
       .unwrap()
       .then(() => navigate('/login'));
@@ -25,10 +24,20 @@ function Layout({ children }) {
   }, [dispatch, isLoggedIn, user]);
 
   return (
-    <div className="d-flex flex-column min-vh-100">
-      {/* Header */}
-      <header className="text-white py-3 px-4 d-flex align-items-center justify-content-between shadow-sm"
-      style={{ backgroundColor: '#0a1c4b' }}>
+    <div style={{ paddingTop: '90px', paddingBottom: '60px' }}>
+      
+      {/* Header - fixed top */}
+      <header
+        className="text-white py-3 px-4 d-flex align-items-center justify-content-between shadow-sm"
+        style={{
+          backgroundColor: '#0a1c4b',
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 1030,
+        }}
+      >
         <div className="d-flex align-items-center">
           <img src="/logo.png" alt="Logo" height="60" className="me-3 rounded-circle" />
           <h4 className="mb-0 fw-bold">Book Rental System</h4>
@@ -49,14 +58,25 @@ function Layout({ children }) {
       </header>
 
       {/* Main Content */}
-      <main className="container flex-grow-1 my-4">
+      <main className="container my-4">
         {children}
       </main>
 
-      {/* Footer */}
-      <footer className="text-center p-3 border-top mt-auto"
-      style={{ backgroundColor: '#0a1c4b' }}>
-        <small style={{ color: '#ffffff' }}>&copy; {new Date().getFullYear()} Book Rental System. All rights reserved.</small>
+      {/* Footer - fixed bottom */}
+      <footer
+        className="text-center p-3 border-top"
+        style={{
+          backgroundColor: '#0a1c4b',
+          position: 'fixed',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          zIndex: 1020,
+        }}
+      >
+        <small style={{ color: '#ffffff' }}>
+          &copy; {new Date().getFullYear()} Book Rental System. All rights reserved.
+        </small>
       </footer>
 
       {/* Logout Confirmation Modal */}
@@ -76,24 +96,19 @@ function Layout({ children }) {
                   <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>
                     Cancel
                   </button>
-                  <button
-                    type="button"
-                    className="btn btn-danger"
-                    onClick={handleLogout}
-                  >
+                  <button type="button" className="btn btn-danger" onClick={handleLogout}>
                     <FaSignOutAlt className="me-2" /> Logout
                   </button>
                 </div>
               </div>
             </div>
           </div>
-
-          {/* Modal Backdrop */}
           <div className="modal-backdrop fade show"></div>
         </>
       )}
     </div>
   );
 }
+
 
 export default Layout;
