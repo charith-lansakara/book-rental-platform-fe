@@ -28,7 +28,7 @@ function Layout({ children }) {
       
       {/* Header - fixed top */}
       <header
-        className="text-white py-3 px-4 d-flex align-items-center justify-content-between shadow-sm"
+        className="text-white py-3 px-4 d-flex flex-wrap align-items-center justify-content-between shadow-sm"
         style={{
           backgroundColor: '#0a1c4b',
           position: 'fixed',
@@ -38,15 +38,15 @@ function Layout({ children }) {
           zIndex: 1030,
         }}
       >
-        <div className="d-flex align-items-center">
-          <img src="/logo.png" alt="Logo" height="60" className="me-3 rounded-circle" />
+        <div className="d-flex align-items-center mb-2 mb-md-0">
+          <img src="/logo.png" alt="Logo" height="50" className="me-3 rounded-circle" />
           <h4 className="mb-0 fw-bold">Book Rental System</h4>
         </div>
 
         {isLoggedIn && (
-          <nav className="d-flex align-items-center">
-            <Link to="/" className="btn btn-outline-light me-3">Dashboard</Link>
-            <span className="me-3">Hi, <strong>{user?.name}</strong> ({user?.role})</span>
+          <nav className="d-flex flex-wrap align-items-center gap-2">
+            <Link to="/" className="btn btn-outline-light">Dashboard</Link>
+            <span className="fw-semibold">Hi, <strong>{user?.name}</strong> ({user?.role})</span>
             <button
               onClick={() => setShowModal(true)}
               className="btn btn-danger d-flex align-items-center"
